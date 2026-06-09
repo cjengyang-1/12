@@ -1,40 +1,331 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>我的博客</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
-body{background:#f5f5f5;color:#333;max-width:800px;margin:0 auto;padding:20px}
-header{text-align:center;margin-bottom:30px}
-nav a{margin:0 10px;color:#2c3e50;text-decoration:none}
-article{background:white;padding:20px;margin-bottom:20px;border-radius:8px}
-h2{color:#2c3e50;margin-bottom:10px}
-.meta{color:#777;font-size:14px;margin-bottom:10px}
-footer{text-align:center;margin-top:30px;color:#666}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>静读时光 | 个人博客</title>
+  <!-- 引入图标库 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* 全局样式重置 */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* 全局变量 - 方便修改配色 */
+    :root {
+      --primary: #6a8eae;
+      --primary-dark: #4a6c8c;
+      --light: #f8f9fa;
+      --dark: #2c3e50;
+      --gray: #7f8c8d;
+      --white: #ffffff;
+      --shadow: 0 4px 12px rgba(0,0,0,0.08);
+      --transition: all 0.3s ease;
+    }
+
+    body {
+      background-color: #f5f7fa;
+      color: var(--dark);
+      line-height: 1.6;
+    }
+
+    /* 导航栏样式 */
+    .navbar {
+      background: var(--white);
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .nav-menu {
+      display: flex;
+      list-style: none;
+      gap: 2rem;
+    }
+
+    .nav-menu a {
+      text-decoration: none;
+      color: var(--dark);
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .nav-menu a:hover {
+      color: var(--primary);
+    }
+
+    /* 博客主体容器 */
+    .container {
+      max-width: 1200px;
+      margin: 3rem auto;
+      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 2rem;
+    }
+
+    /* 博客文章卡片 */
+    .blog-card {
+      background: var(--white);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      margin-bottom: 2rem;
+      transition: var(--transition);
+    }
+
+    .blog-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+
+    .blog-img {
+      width: 100%;
+      height: 240px;
+      object-fit: cover;
+    }
+
+    .blog-content {
+      padding: 1.5rem;
+    }
+
+    .blog-category {
+      display: inline-block;
+      background: var(--primary);
+      color: white;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .blog-title {
+      font-size: 1.5rem;
+      margin-bottom: 0.8rem;
+      color: var(--dark);
+    }
+
+    .blog-meta {
+      color: var(--gray);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .blog-desc {
+      color: var(--dark);
+      line-height: 1.7;
+      margin-bottom: 1.2rem;
+    }
+
+    .read-more {
+      display: inline-block;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .read-more:hover {
+      color: var(--primary-dark);
+      padding-left: 5px;
+    }
+
+    /* 侧边栏样式 */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .widget {
+      background: var(--white);
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+    }
+
+    .widget-title {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--primary);
+    }
+
+    .author-img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      display: block;
+      margin: 0 auto 1rem;
+      object-fit: cover;
+    }
+
+    .author-info {
+      text-align: center;
+    }
+
+    .category-list {
+      list-style: none;
+    }
+
+    .category-list li {
+      padding: 0.6rem 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .category-list a {
+      text-decoration: none;
+      color: var(--dark);
+      transition: var(--transition);
+    }
+
+    .category-list a:hover {
+      color: var(--primary);
+      padding-left: 3px;
+    }
+
+    /* 页脚 */
+    footer {
+      background: var(--dark);
+      color: var(--white);
+      text-align: center;
+      padding: 2rem;
+      margin-top: 3rem;
+    }
+
+    .social-links {
+      margin: 1rem 0;
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .social-links a {
+      color: var(--white);
+      font-size: 1.2rem;
+      transition: var(--transition);
+    }
+
+    .social-links a:hover {
+      color: var(--primary);
+    }
+
+    /* 响应式适配 - 手机端 */
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+      
+      .nav-menu {
+        gap: 1rem;
+      }
+    }
+  </style>
 </head>
 <body>
-<header>
-<h1>我的博客</h1>
-<nav>
-<a href="#">首页</a><a href="#">文章</a><a href="#">关于</a>
-</nav>
-</header>
 
-<article>
-<h2>第一篇博客</h2>
-<div class="meta">2025-01-01</div>
-<p>这是我的第一篇博客内容，简单又好用。</p>
-</article>
+  <!-- 导航栏 -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="#" class="logo">静读时光</a>
+      <ul class="nav-menu">
+        <li><a href="#">首页</a></li>
+        <li><a href="#">文章</a></li>
+        <li><a href="#">分类</a></li>
+        <li><a href="#">关于</a></li>
+        <li><a href="#">联系</a></li>
+      </ul>
+    </div>
+  </nav>
 
-<article>
-<h2>学习记录</h2>
-<div class="meta">2025-01-02</div>
-<p>今天学习了HTML和CSS，轻松做出网页。</p>
-</article>
+  <!-- 主体内容 -->
+  <div class="container">
+    <!-- 博客文章列表 -->
+    <main class="blogs">
+      <article class="blog-card">
+        <img src="https://picsum.photos/800/400?random=1" alt="博客封面" class="blog-img">
+        <div class="blog-content">
+          <span class="blog-category">生活感悟</span>
+          <h2 class="blog-title">慢下来，感受生活的美好</h2>
+          <div class="blog-meta">
+            <i class="fas fa-calendar"></i> 2025年12月29日 &nbsp;&nbsp;
+            <i class="fas fa-user"></i> 博主
+          </div>
+          <p class="blog-desc">在快节奏的时代里，我们总是忙着赶路，却忘了为何出发。偶尔停下脚步，听听内心的声音，看看身边的风景，才发现平凡的日常里藏着最珍贵的幸福...</p>
+          <a href="#" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </article>
 
-<footer>© 2025 我的博客</footer>
+      <article class="blog-card">
+        <img src="https://picsum.photos/800/400?random=2" alt="博客封面" class="blog-img">
+        <div class="blog-content">
+          <span class="blog-category">阅读分享</span>
+          <h2 class="blog-title">一本好书，一段修行</h2>
+          <div class="blog-meta">
+            <i class="fas fa-calendar"></i> 2025年12月28日 &nbsp;&nbsp;
+            <i class="fas fa-user"></i> 博主
+          </div>
+          <p class="blog-desc">读书，是世界上门槛最低的高贵。它让我们在有限的生命里，体验无限的人生，在文字中遇见更好的自己，在思考中找到前行的力量...</p>
+          <a href="#" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </article>
+    </main>
+
+    <!-- 侧边栏 -->
+    <aside class="sidebar">
+      <!-- 博主介绍 -->
+      <div class="widget">
+        <h3 class="widget-title">关于博主</h3>
+        <img src="https://picsum.photos/200/200?random=10" alt="博主头像" class="author-img">
+        <div class="author-info">
+          <p>热爱生活、喜欢阅读、专注写作的普通人，用文字记录美好，用思考温暖时光。</p>
+        </div>
+      </div>
+
+      <!-- 文章分类 -->
+      <div class="widget">
+        <h3 class="widget-title">文章分类</h3>
+        <ul class="category-list">
+          <li><a href="#">生活感悟 (8)</a></li>
+          <li><a href="#">阅读分享 (12)</a></li>
+          <li><a href="#">旅行笔记 (5)</a></li>
+          <li><a href="#">成长记录 (6)</a></li>
+        </ul>
+      </div>
+    </aside>
+  </div>
+
+  <!-- 页脚 -->
+  <footer>
+    <div class="social-links">
+      <a href="#"><i class="fab fa-weixin"></i></a>
+      <a href="#"><i class="fab fa-weibo"></i></a>
+      <a href="#"><i class="fab fa-github"></i></a>
+      <a href="#"><i class="fab fa-qq"></i></a>
+    </div>
+    <p>© 2025 静读时光 - 保留所有权利</p>
+  </footer>
+
 </body>
 </html>
